@@ -50,16 +50,17 @@ export default function MapScreen() {
           latitudeDelta: 0.9,
           longitudeDelta: 0.9,
         }}
-        onPress={() => setSelectedSpot(null)} // Dismiss card when tapping empty map space
+        onPress={() => setSelectedSpot(null)}
       >
         {filteredSpots.map((spot) => (
           <Marker
             key={spot.id}
             coordinate={{ latitude: spot.lat, longitude: spot.lng }}
-            title={spot.name}
-            description={spot.note}
             pinColor={PIN_COLORS[spot.category]}
-            onPress={() => setSelectedSpot(spot)}
+            onPress={() => {
+              console.log('MARKER TAPPED:', spot.name);
+              setSelectedSpot(spot);
+            }}
           />
         ))}
       </MapView>
@@ -81,15 +82,15 @@ export default function MapScreen() {
         </ScrollView>
       </View>
 
-      {/* Google Maps-style Bottom Info Card */}
-      {selectedSpot && (
+      {/* Google Maps-style Bottom Info Card - Rendered directly */}
+      {selectedSpot !== null && (
         <View style={styles.cardContainer}>
           <View style={styles.cardHeader}>
-            <View>
+            <View style={{ flex: 1 }}>
               <Text style={styles.cardCategory}>{selectedSpot.category.toUpperCase()}</Text>
               <Text style={styles.cardTitle}>{selectedSpot.name}</Text>
             </View>
-            <TouchableOpacity onPress={() => setSelectedSpot(null)}>
+            <TouchableOpacity onPress={() => setSelectedSpot(null)} style={styles.closeButton}>
               <Text style={styles.closeText}>✕</Text>
             </TouchableOpacity>
           </View>
@@ -114,9 +115,9 @@ export default function MapScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
+  container: { flex: 1, position: 'relative' },
   map: { flex: 1 },
-  filterWrapper: { position: 'absolute', top: 60, left: 0, right: 0 },
+  filterWrapper: { position: 'absolute', top: 60, left: 0, right: 0, zIndex: 5 },
   filterRow: { paddingHorizontal: 16, gap: 8 },
   chip: {
     backgroundColor: 'rgba(255, 255, 255, 0.95)',
@@ -133,17 +134,19 @@ const styles = StyleSheet.create({
   chipTextActive: { color: '#fff' },
   cardContainer: {
     position: 'absolute',
-    bottom: 30,
+    bottom: 96,
     left: 16,
     right: 16,
-    backgroundColor: '#fff',
+    backgroundColor: '#ffffff',
     borderRadius: 16,
     padding: 16,
     shadowColor: '#000',
-    shadowOpacity: 0.2,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
     shadowRadius: 8,
-    elevation: 6,
+    elevation: 10,
   },
+  closeButton: { padding: 4 },
   cardHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' },
   cardCategory: { fontSize: 11, fontWeight: '700', color: '#2E7D32', marginBottom: 2 },
   cardTitle: { fontSize: 18, fontWeight: 'bold', color: '#111' },
