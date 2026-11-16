@@ -50,7 +50,7 @@ export default function MapScreen() {
           latitudeDelta: 0.9,
           longitudeDelta: 0.9,
         }}
-        onPress={() => setSelectedSpot(null)}
+        // Remove the onPress={() => setSelectedSpot(null)} from here!
       >
         {filteredSpots.map((spot) => (
           <Marker
