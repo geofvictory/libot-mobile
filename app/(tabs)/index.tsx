@@ -52,13 +52,14 @@ export default function MapScreen() {
         }}
         // Remove the onPress={() => setSelectedSpot(null)} from here!
       >
-        {filteredSpots.map((spot) => (
+       {filteredSpots.map((spot) => (
           <Marker
             key={spot.id}
             coordinate={{ latitude: spot.lat, longitude: spot.lng }}
             pinColor={PIN_COLORS[spot.category]}
-            onPress={() => {
-              console.log('MARKER TAPPED:', spot.name);
+            onPress={(e) => {
+              // Prevents any native event bubbling delays on mobile
+              e.stopPropagation?.();
               setSelectedSpot(spot);
             }}
           />
